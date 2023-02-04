@@ -92,7 +92,7 @@
         },
         created: function () {
 
-            fetch("http://appserver-env.eba-q8q253rk.us-east-1.elasticbeanstalk.com/api/lessons").then(
+            fetch("https://appserver-env.eba-q8q253rk.us-east-1.elasticbeanstalk.com/api/lessons").then(
                 function (response) {
                     response.json().then(
                         function (json) {
@@ -104,7 +104,7 @@
         },
         methods: {
             searchLessons: function () {
-                fetch(`http://appserver-env.eba-q8q253rk.us-east-1.elasticbeanstalk.com/api/find/lessons/${this.searchTerm}`).then(
+                fetch(`https://appserver-env.eba-q8q253rk.us-east-1.elasticbeanstalk.com/api/find/lessons/${this.searchTerm}`).then(
                     function (response) {
                         response.json().then(
                             function (json) {
