@@ -26,27 +26,24 @@
 
     <div id="app">
 
-        <div v-if="showRegistration===false && showProducts===true">
+        <button @click="ShowCart">cart</button>
 
+        <div v-if="showRegistration===false && showProducts===true">
             
-                <select id="sortBy" v-model="sortBy" @change="SortingInvoke">
-                    <option value="name">Name</option>
-                    <option value="price">Price</option>
-                    <option value="location">Location</option>
-                    <option value="spaces">spaces</option>
-                </select>
-                <input type="radio" v-model="sortOrder" name="sortOrder" value="1" @change="SortingInvoke"
-                    checked>
-                Ascending
-                </label>
-                <label>
-                    <input type="radio" v-model="sortOrder" name="sortOrder" value="-1" @change="SortingInvoke">
-                    Descending
-                </label>
-                <div v-for="l in sortlessons">
-                    {{ l }}
-                </div>
-            
+            <select id="sortBy" v-model="sortBy" @change="SortingInvoke">
+                <option value="name">Name</option>
+                <option value="price">Price</option>
+                <option value="location">location</option>
+                <option value="spaces">spaces</option>
+            </select>
+            <input type="radio" v-model="sortOrder" name="sortOrder" value="1" @change="SortingInvoke" checked>
+            Ascending
+            </label>
+            <label>
+                <input type="radio" v-model="sortOrder" name="sortOrder" value="-1" @change="SortingInvoke">
+                Descending
+            </label>
+
             <input type="text" v-model="searchTerm" @keyup="searchLessons">
             <h4>Search Results:</h4>
 
@@ -131,11 +128,15 @@
                         )
                     }
                 );
+            },
+            ShowCart: function(){
+                if(this.showProducts===true)
+                this.showProducts=false; else this.showProducts=true;
             }
 
         },
         computed: {
-            
+
         },
         watch: {
             searchTerm: function (newTerm) {
@@ -146,6 +147,7 @@
             }
         }
     });
+
 </script>
 
 </html>
