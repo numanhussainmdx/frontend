@@ -30,45 +30,53 @@
 
             <input type="checkbox" v-model="sortEnabled"> Sort?
             <div v-if="sortEnabled">
-                <select id="sort-by" @change="alertSelectedOption">
+                <select id="sortBy" v-model="sortBy" @change="alertSelectedOption">
                     <option value="name">Name</option>
                     <option value="price">Price</option>
                     <option value="location">Location</option>
                 </select>
-                <input type="radio" name="sort-order" value="asc" checked>
+                <input type="radio" v-model="sortOrder" name="sortOrder" value="1" @change="alertSelectedOption"
+                    checked>
                 Ascending
                 </label>
                 <label>
-                    <input type="radio" name="sort-order" value="desc">
+                    <input type="radio" v-model="sortOrder" name="sortOrder" value="-1" @change="alertSelectedOption">
                     Descending
                 </label>
-            </div>
-            <input type="text" v-model="searchTerm" @keyup="searchLessons">
-            <h4>Search Results:</h4>
-
-            <div v-if="searchTerm.length > 0" v-for="a in searchedlesson">
-                {{ a }}
-            </div>
-
-
-            <hr>
-            <div v-for="l in lessons">
-                <div v-if="showProduct">
+                <div v-for="l in sortlessons">
                     {{ l }}
                 </div>
-                <div v-else>
-                    <h3>False</h3>
-                </div>
 
+
+            </div>
+        </div>
+        <hr>
+        <input type="text" v-model="searchTerm" @keyup="searchLessons">
+        <h4>Search Results:</h4>
+
+        <div v-if="searchTerm.length > 0" v-for="a in searchedlesson">
+            {{ a }}
+        </div>
+
+
+        <hr>
+        <div v-for="l in lessons">
+            <div v-if="showProduct">
+                {{ l }}
+            </div>
+            <div v-else>
+                <h3>False</h3>
             </div>
 
         </div>
-        <div v-else-if="showRegistration===false && showProducts===false">
-            cart view
-        </div>
-        <div v-else>
-            user
-        </div>
+
+    </div>
+    <div v-else-if="showRegistration===false && showProducts===false">
+        cart view
+    </div>
+    <div v-else>
+        user
+    </div>
 
     </div>
 
@@ -89,8 +97,9 @@
             showProduct: true,
             searchTerm: '',
             sortBy: "name",
-            sortOrder: "asc",
+            sortOrder: "1",
             sortEnabled: true,
+            sortlessons: [],
 
         },
         created: function () {
@@ -117,9 +126,12 @@
                     }
                 );
             },
-            alertSelectedOption: function() {
-                fetch(`https://appserver-env.eba-q8q253rk.us-east-1.elasticbeanstalk.com/api/find/lessons/`).then(
+            alertSelectedOption: function () {
+
+                fetch(`https://appserver-env.eba-q8q253rk.us-east-1.elasticbeanstalk.com/api/sort/lessons/${this.sortBy}/${this.sortOrder}`).then(
+
                     function (response) {
+
                         response.json().then(
                             function (json) {
                                 app.lessons = json;
