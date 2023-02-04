@@ -54,7 +54,7 @@
             <hr>
             <div v-for="les in lessons">
                 {{ les }}
-                <button @click="addCart(les)">ADD CART</button>
+                <button v-if="les.spaces > 0" @click="addCart(les)">ADD CART</button>
             </div>
 
         </div>
@@ -62,6 +62,7 @@
             <h4>Cart</h4>
             <div v-for="ca in cart">
                 {{ ca }}
+                <button @click="remCart(ca)">Remove Item</button>
             </div>
         </div>
         <div v-else>
@@ -133,7 +134,28 @@
                 if (this.showProducts === true)
                     this.showProducts = false; else this.showProducts = true;
             },
+            remCart: function (p) {
+
+                // app.cart.forEach(item => {
+                //     if (item._id===p._id){
+                //         item.splice();
+                //     }
+                // })
+                app.cart = app.cart.filter(item => item._id !== p._id);
+                // app.lessons = app.lessons.filter(item => {
+                //     if (item._id === p._id){
+                //         item.spaces=p.spaces;
+                //     }
+                // });
+
+                let spacesAdjust = this.lessons.find(it => it._id===p._id);
+                if (spacesAdjust){
+                    spacesAdjust.spaces += p.qty;
+                }
+                
+            },
             addCart: function (p) {
+
                 let obj = {
                     "_id": p._id,
                     "name": p.name,
@@ -144,6 +166,8 @@
                     "cost": p.price,
                 };
 
+                p.spaces -=1;
+
                 let exists = false;
                 if (app.cart.length === 0) {
                     app.cart.push(obj);
@@ -151,7 +175,7 @@
                     app.cart.forEach(item => {
                         if (item._id === obj._id) {
                             item.qty++;
-                            item.cost=item.price*item.qty;
+                            item.cost = item.price * item.qty;
                             exists = true;
                             return;
                         }
@@ -160,18 +184,18 @@
                         app.cart.push(obj);
                     }
                 }
-                this.calcCart()
+                // keep counter recent
+                this.calcCart();
+                this.adjustQty(p);
             },
         },
         computed: {
-            calcCart(){
-                
+            calcCart() {
                 return this.cart.length;
-            }
+            },
         },
         watch: {
             searchTerm: function (newTerm) {
-
                 if (newTerm.length > 0) {
                     this.searchLessons();
                 }
