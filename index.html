@@ -66,6 +66,8 @@
             </div>
             <div v-if="cart.length > 0">
                 <input type="text" v-model="name" name="name" id="name">
+                <input type="phone" v-model="phone" name="phone" id="phone">
+                <input type="password" v-model="password" name="password" id="password">
                 <input type="email" v-model="email" name="email" value="abc.xyz@gmail.com">
                 <input type="button" @click="proceedOrder()" value="Proceed Order...!">
             </div>
@@ -98,6 +100,8 @@
             orders: [],
             name: "",
             email: "",
+            password:"",
+            phone:"",
 
         },
         created: function () {
@@ -122,8 +126,28 @@
                 this.orders.push({
                     name: this.name,
                     email: this.email,
+                    phone: this.phone,
                     cart: this.cart,
                 })
+
+
+                
+                const user = await fetch('https://appserver-env.eba-q8q253rk.us-east-1.elasticbeanstalk.com/api/users/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: this.name,
+                        email: this.email,
+                        phone: this.phone,
+                        password: this.password,
+                    })
+                });
+
+                if (!user.ok) {
+                    alert(res.statusText);
+                }
 
                 const res = await fetch('https://appserver-env.eba-q8q253rk.us-east-1.elasticbeanstalk.com/api/orders/', {
                     method: 'POST',
