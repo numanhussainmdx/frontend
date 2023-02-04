@@ -27,9 +27,7 @@
 
     <div id="app">
 
-        <div v-if="showProducts">
-
-
+        <div v-if="showRegistration===false && showProducts===true">
 
             <input type="text" v-model="searchTerm" @keyup="searchLessons">
 
@@ -65,10 +63,15 @@
             </div>
 
         </div>
+        <div v-else-if="showRegistration===false && showProducts===false">
+            cart view
+        </div>
+        <div v-else>
+            user
+        </div>
+
     </div>
-    <div v-else>
-        hi
-    </div>
+
 
 </body>
 
@@ -80,10 +83,12 @@
         data: {
             lessons: [],
             showProducts: true,
+            showRegistration: false,
             searchedlesson: [],
             showProduct: true,
             searchTerm: '',
-
+            sortBy: "name",
+            sortOrder: "asc",
         },
         created: function () {
 
