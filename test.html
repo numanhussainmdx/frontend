@@ -30,7 +30,7 @@
 
             <input type="checkbox" v-model="sortEnabled"> Sort?
             <div v-if="sortEnabled">
-                <select id="sort-by">
+                <select id="sort-by" @change="alertSelectedOption">
                     <option value="name">Name</option>
                     <option value="price">Price</option>
                     <option value="location">Location</option>
@@ -90,7 +90,7 @@
             searchTerm: '',
             sortBy: "name",
             sortOrder: "asc",
-            sortEnabled: false,
+            sortEnabled: true,
 
         },
         created: function () {
@@ -112,6 +112,17 @@
                         response.json().then(
                             function (json) {
                                 app.searchedlesson = json;
+                            }
+                        )
+                    }
+                );
+            },
+            alertSelectedOption: function() {
+                fetch(`https://appserver-env.eba-q8q253rk.us-east-1.elasticbeanstalk.com/api/find/lessons/`).then(
+                    function (response) {
+                        response.json().then(
+                            function (json) {
+                                app.lessons = json;
                             }
                         )
                     }
