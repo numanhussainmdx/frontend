@@ -28,29 +28,31 @@
 
         <div v-if="showRegistration===false && showProducts===true">
 
-            <input type="checkbox" v-model="sortEnabled"> Sort?
-            <div v-if="sortEnabled">
-                <select id="sort-by">
+            
+                <select id="sortBy" v-model="sortBy" @change="SortingInvoke">
                     <option value="name">Name</option>
                     <option value="price">Price</option>
                     <option value="location">Location</option>
+                    <option value="spaces">spaces</option>
                 </select>
-                <input type="radio" name="sort-order" value="asc" checked>
+                <input type="radio" v-model="sortOrder" name="sortOrder" value="1" @change="SortingInvoke"
+                    checked>
                 Ascending
                 </label>
                 <label>
-                    <input type="radio" name="sort-order" value="desc">
+                    <input type="radio" v-model="sortOrder" name="sortOrder" value="-1" @change="SortingInvoke">
                     Descending
                 </label>
-            </div>
+                <div v-for="l in sortlessons">
+                    {{ l }}
+                </div>
+            
             <input type="text" v-model="searchTerm" @keyup="searchLessons">
             <h4>Search Results:</h4>
 
             <div v-if="searchTerm.length > 0" v-for="a in searchedlesson">
                 {{ a }}
             </div>
-
-
             <hr>
             <div v-for="l in lessons">
                 <div v-if="showProduct">
@@ -72,9 +74,7 @@
 
     </div>
 
-
 </body>
-
 
 <script>
 
@@ -117,10 +117,25 @@
                         )
                     }
                 );
+            },
+            SortingInvoke: function () {
+
+                fetch(`https://appserver-env.eba-q8q253rk.us-east-1.elasticbeanstalk.com/api/sort/lessons/${this.sortBy}/${this.sortOrder}`).then(
+
+                    function (response) {
+
+                        response.json().then(
+                            function (json) {
+                                app.lessons = json;
+                            }
+                        )
+                    }
+                );
             }
+
         },
         computed: {
-
+            
         },
         watch: {
             searchTerm: function (newTerm) {
