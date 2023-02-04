@@ -6,26 +6,122 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+        integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"
+        integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD"
+        crossorigin="anonymous"></script>
 
     <title>MY CW2 CST3145 ASSIGNMENT</title>
 </head>
 
 <body>
-    <h2>Hi, this is my frontend application.</h2>
-    <div id="app">{{ message }}</div>
+    <h2>Lessons Spaces</h2>
+
+
+    <div id="app">
+
+        <div v-if="showProducts">
+
+
+
+            <input type="text" v-model="searchTerm" @keyup="searchLessons">
+
+            <div v-if="searchTerm.length > 0" v-for="a in searchedlesson">
+                <h4>Search Results:</h4>
+                {{ a }}
+            </div>
+
+            <br>
+            <select id="sort-by">
+                <option value="name">Name</option>
+                <option value="price">Price</option>
+                <option value="location">Location</option>
+            </select>
+            <input type="radio" name="sort-order" value="asc" checked>
+            Ascending
+            </label>
+            <label>
+                <input type="radio" name="sort-order" value="desc">
+                Descending
+            </label>
+            <hr>
+            <div v-for="l in lessons">
+
+                {{ l }}
+                <div v-if="showProduct">
+                    <h2>True</h2>
+                </div>
+                <div v-else>
+                    <h3>False</h3>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <div v-else>
+        hi
+    </div>
+
 </body>
 
 
-<script >
+<script>
 
     let app = new Vue({
         el: '#app',
         data: {
-            message: 'Hello, Vue.js!'
-        },
-        template: '<div>{{ message }}</div>'
-    });
+            lessons: [],
+            showProducts: true,
+            searchedlesson: [],
+            showProduct: true,
+            searchTerm: '',
 
+        },
+        created: function () {
+
+            fetch("http://appserver-env.eba-q8q253rk.us-east-1.elasticbeanstalk.com/api/lessons").then(
+                function (response) {
+                    response.json().then(
+                        function (json) {
+                            app.lessons = json;
+                        }
+                    )
+
+                })
+        },
+        methods: {
+            searchLessons: function () {
+                fetch(`http://appserver-env.eba-q8q253rk.us-east-1.elasticbeanstalk.com/api/find/lessons/${this.searchTerm}`).then(
+                    function (response) {
+                        response.json().then(
+                            function (json) {
+                                app.searchedlesson = json;
+                            }
+                        )
+                    }
+                );
+            }
+        },
+        computed: {
+
+        },
+        watch: {
+            searchTerm: function (newTerm) {
+
+                if (newTerm.length > 0) {
+                    this.searchLessons();
+                }
+            }
+        }
+    });
 </script>
 
 </html>
