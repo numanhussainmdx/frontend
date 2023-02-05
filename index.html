@@ -59,11 +59,12 @@
                 </label>
             </div>
 
-            <div class="container"><input type="text" v-model="searchTerm" @keyup="searchLessons">
-                <h5>Search Results:</h5>
+            <div class="container">Search <input type="text" v-model="searchTerm" @keyup="searchLessons">
+                
                 <div class="container">
-                    <div class="row">
-                        <div v-for="a in searchedlesson" v-if="searchTerm.length > 0" style="margin:2px"
+                    <div class="row" v-if="searchTerm.length > 0" >
+                        <i>Search Results:</i>
+                        <div v-for="a in searchedlesson" style="margin:2px"
                             class="col-2 card">
                             <div class="row">
                                 <div class="col-8">
@@ -71,6 +72,7 @@
                                     <div>Price: £{{ a.price }}</div>
                                     <div>Spaces: {{ a.spaces }}</div>
                                     <div>Location: {{ a.location }}</div>
+                                    <button v-if="a.spaces > 0" @click="addCart(a)">ADD CART</button>
                                 </div>
                                 <div class="col-4">
                                     <img v-bind:src='a.image' width="95%" alt="" class="">
@@ -88,7 +90,7 @@
                     <div v-for="les in lessons" style="margin:2px" class="col-2 card">
                         <div class="row">
                             <div class="col-10">
-                                <img v-bind:src='les.image'  style="margin: 0px; width: 50% !important;" alt="" class="">
+                                <img v-bind:src='les.image' style="margin: 0px; width: 50% !important;" alt="" class="">
                                 <div><u>{{ les.name }}</u></div>
                                 <div>Price: £{{ les.price }}</div>
                                 <div>Spaces: {{ les.spaces }}</div>
@@ -107,7 +109,7 @@
                     <div class="col-8">
                         <div><u>{{ ca.name }}</u></div>
                         <div>Price: £{{ ca.price }}</div>
-                        <div>Spaces: {{ ca.spaces }}</div>
+                        <div>Qty: {{ ca.qty }}</div>
                         <div>Location: {{ ca.location }}</div>
                     </div>
                     <br>
